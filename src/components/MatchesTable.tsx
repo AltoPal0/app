@@ -2,38 +2,96 @@ import type { MatchEntry } from '../types';
 
 interface Props {
   data: MatchEntry[];
+  selectedTeam: string | null;
+  highlightTeam: string | null;
 }
 
-export default function MatchesTable({ data }: Props) {
+
+
+export default function MatchesTable({ data, selectedTeam, highlightTeam }: Props) {
+  const filteredMatches = selectedTeam
+    ? data.filter(match =>
+      match.leftTeam === selectedTeam || match.rightTeam === selectedTeam
+    )
+    : data;
+
   return (
     <div className="w-full">
-      <h2 className="text-2xl font-semibold mb-4 text-center">Matches & Schedule</h2>
-      <table className="table-auto w-full border border-gray-300 rounded shadow-sm text-center">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="px-3 py-2">Time</th>
-            <th className="px-3 py-2">Team 1</th>
-            <th className="px-3 py-2">Score</th>
-            <th className="px-3 py-2">vs</th>
-            <th className="px-3 py-2">Score</th>
-            <th className="px-3 py-2">Team 2</th>
-            <th className="px-3 py-2">Court</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((match, idx) => (
-            <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-              <td className="px-3 py-2">{match.startTime}</td>
-              <td className="px-3 py-2">{match.leftTeam}</td>
-              <td className="px-3 py-2">{match.leftScore}</td>
-              <td className="px-3 py-2">vs.</td>
-              <td className="px-3 py-2">{match.rightScore}</td>
-              <td className="px-3 py-2">{match.rightTeam}</td>
-              <td className="px-3 py-2">{match.court}</td>
+      <div className="overflow-x-auto">
+        <table className="w-full table-fixed text-xs text-center">
+          <thead className="bg-gray-100 border-b-2 border-gray-300">
+            <tr>
+              <th className="w-[38%] px-1 py-1 text-left"></th>
+              <th className="w-[24%] px-1 py-1 text-center text-lg">MATCHES</th>
+              <th className="w-[38%] px-1 py-1 text-right"></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredMatches.map((match, idx) => {
+              const hasScores = match.leftScore !== '' && match.rightScore !== '';
+              const left = Number(match.leftScore);
+              const right = Number(match.rightScore);
+              const [hour, minute] = (match.startTime || '').split('h');
+
+              const leftNames = match.leftTeam.split('/').map(n => n.trim());
+              const rightNames = match.rightTeam.split('/').map(n => n.trim());
+
+              return (
+                <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                  {/* Left team (2 lines) */}
+                  <td className={`px-2 py-2 text-lg text-left leading-tight ${match.leftTeam === selectedTeam ? 'font-bold' : ''
+                    }`}>
+                    {leftNames.map((n, i) => (
+                      <div
+                        key={i}
+                        className={highlightTeam && match.leftTeam === highlightTeam ? 'font-bold' : ''}
+                      >
+                        {n}
+                      </div>
+                    ))}
+                  </td>
+
+                  {/* Scores or time as 3 parts */}
+                  <td className="px-0 py-2 text-center">
+                    {hasScores ? (
+                      <div className="flex justify-center items-center gap-1 py-0">
+                        <span className={`flex aspect-square w-12 items-center justify-center rounded text-white font-bold text-base ${left > right ? 'bg-green-500' : 'bg-gray-300 text-gray-800'}`}>
+                          {match.leftScore}
+                        </span>
+                        <span className={`flex aspect-square w-12 items-center justify-center rounded text-white font-bold text-base ${right > left ? 'bg-green-500' : 'bg-gray-300 text-gray-800'}`}>
+                          {match.rightScore}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center space-y-1">
+                        <div className="text-base font-semibold">
+                          {hour}h{minute}
+                        </div>
+                        <span className="inline-block px-2 py-1 text-xs font-semibold rounded bg-blue-600 text-white border border-white">
+                          Piste {match.court}
+                        </span>
+                      </div>
+                    )}
+                  </td>
+
+                  {/* Right team (2 lines) */}
+                  <td className={`px-2 py-2 text-lg text-right leading-tight ${match.rightTeam === selectedTeam ? 'font-bold' : ''
+                    }`}>
+                    {rightNames.map((n, i) => (
+                      <div
+                        key={i}
+                        className={highlightTeam && match.rightTeam === highlightTeam ? 'font-bold' : ''}
+                      >
+                        {n}
+                      </div>
+                    ))}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

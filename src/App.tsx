@@ -5,12 +5,17 @@ import Group from './pages/Group';
 function App() {
   return (
     <Router>
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 text-gray-800 space-y-6">
-        <h1 className="text-4xl font-bold mt-4">Tournament Dashboard</h1>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/group/:id" element={<Group />} />
-        </Routes>
+      <div className="min-h-screen w-full bg-gray-100 text-gray-800">
+        {/* <header className="w-full py-6 px-4 bg-white shadow mb-4">
+          <h1 className="text-3xl font-bold text-center">Tournament Dashboard</h1>
+        </header> */}
+
+        <main className="w-full">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/group/:id" element={<Group />} />
+          </Routes>
+        </main>
       </div>
     </Router>
   );

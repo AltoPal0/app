@@ -4,8 +4,8 @@ const API_KEY = 'AIzaSyAmMbrDB_sMbKvgQzYRlhfqYzTbhQ1ZMxM';
 const SPREADSHEET_ID = '1Ghxf5Adi2np5vN7mimAHIDWBWRpiWV8r28_1v9Kj0YE';
 
 function buildRange(group: string, type: 'rankings' | 'matches'): string {
-  if (type === 'rankings') return `${group}!G3:J7`;
-  if (type === 'matches') return `${group}!A1:G20`;  // A:E teams and scores, F = court
+  if (type === 'rankings') return `${group}!N3:Q7`;
+  if (type === 'matches') return `${group}!A2:G20`;  // A:E teams and scores, F = court
   return '';
 }
 
