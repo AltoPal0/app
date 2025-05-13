@@ -15,7 +15,7 @@ export default function GroupView({ rankings, matches, selectedTeam, lastTeam }:
     <div className="space-y-4">
 
       {/* Rankings Card */}
-      <div className="bg-white border border-gray-200 rounded-xl shadow overflow-hidden">
+      <div className="border border-gray-200 rounded-xl shadow overflow-hidden">
         <RankingsTable data={rankings} selectedTeam={selectedTeam} />
       </div>
 

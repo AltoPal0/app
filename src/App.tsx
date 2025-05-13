@@ -5,7 +5,7 @@ import Group from './pages/Group';
 function App() {
   return (
     <Router>
-      <div className="min-h-screen w-full bg-gray-100 text-gray-800">
+      <div className="min-h-screen w-full text-gray-800">
         {/* <header className="w-full py-6 px-4 bg-white shadow mb-4">
           <h1 className="text-3xl font-bold text-center">Tournament Dashboard</h1>
         </header> */}
