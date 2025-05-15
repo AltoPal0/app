@@ -14,6 +14,7 @@ interface Props {
 
 export default function MatchesTable({ data, selectedTeam, highlightTeam, onScoreUpdated }: Props) {
   const [editingMatch, setEditingMatch] = useState<MatchEntry | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   const filteredMatches = selectedTeam
     ? data.filter(match =>
@@ -105,6 +106,7 @@ export default function MatchesTable({ data, selectedTeam, highlightTeam, onScor
           onConfirm={async (leftScore, rightScore) => {
             if (editingMatch) {
               try {
+                setIsSaving(true);
                 const groupMatch = editingMatch.group; // assumes match has a 'group' property
                 const matchIndex = data.findIndex(
                   m => m.leftTeam === editingMatch.leftTeam && m.rightTeam === editingMatch.rightTeam
@@ -116,10 +118,12 @@ export default function MatchesTable({ data, selectedTeam, highlightTeam, onScor
               } catch (error) {
                 console.error("Failed to update match score:", error);
               } finally {
+                setIsSaving(false);
                 setEditingMatch(null);
               }
             }
           }}
+          loading={isSaving}
         />
       )}
     </div>

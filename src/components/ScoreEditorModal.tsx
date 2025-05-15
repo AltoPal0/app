@@ -5,12 +5,24 @@ interface Props {
   match: MatchEntry;
   onConfirm: (leftScore: string, rightScore: string) => void;
   onCancel: () => void;
+  loading?: boolean;
 }
 
-export default function ScoreEditorModal({ match, onConfirm, onCancel }: Props) {
+export default function ScoreEditorModal({ match, onConfirm, onCancel, loading }: Props) {
   const [selectedWinner, setSelectedWinner] = useState<'left' | 'right' | null>(null);
   const [leftScore, setLeftScore] = useState('');
   const [rightScore, setRightScore] = useState('');
+
+  if (loading) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white p-6 rounded-xl shadow-xl text-center">
+          <div className="animate-spin h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+          <div className="text-lg font-semibold text-gray-700">Mise à jour en cours...</div>
+        </div>
+      </div>
+    );
+  }
 
   const handleConfirm = () => {
     if (leftScore !== '' && rightScore !== '') {
