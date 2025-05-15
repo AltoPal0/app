@@ -40,6 +40,36 @@ export async function fetchMatches(group: string): Promise<MatchEntry[]> {
       rightTeam: row[5] || '',
       rightScore: row[4] || '',
       startTime: row[0] || '',
-      court: row[6] || ''
+      court: row[6] || '',
+      group: group
     }));
+}
+
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyfZyB3vHGvbYtWcoiev7Rs82Ki71xFtz0jF0hFS08C-EM4hposY64zNeIqCAdO2FKB/exec';
+
+export async function updateMatchScore(
+  group: string,
+  rowIndex: number,
+  leftScore: string,
+  rightScore: string
+): Promise<void> {
+  const body = new URLSearchParams({
+    group,
+    rowIndex: String(rowIndex),
+    leftScore,
+    rightScore,
+  });
+
+  const response = await fetch(SCRIPT_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body,
+  });
+
+  const result = await response.json();
+  if (!result.success) {
+    throw new Error(result.message || 'Unknown error while updating score');
+  }
 }

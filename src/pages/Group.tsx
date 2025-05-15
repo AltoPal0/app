@@ -51,23 +51,23 @@ export default function Group() {
         fetchMatches(id).then(newMatches => {
           setRankings(newRankings);
           setMatches(newMatches);
-  
-          // Build new team list from group
+
           const allTeams = Array.from(new Set([
             ...newRankings.map(r => r.team),
             ...newMatches.map(m => m.leftTeam),
             ...newMatches.map(m => m.rightTeam),
           ])).filter(Boolean);
-  
-          // Check if selectedTeam is valid in this group
+
+          setLastTeam(prev => prev ?? selectedTeam);
+
+          // Validate selectedTeam against new list
           if (selectedTeam && !allTeams.includes(selectedTeam)) {
             setSelectedTeam(null);
           }
-  
-          setLastTeam(prev => prev ?? selectedTeam); // Preserve lastTeam if not already set
         });
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   
@@ -125,6 +125,12 @@ export default function Group() {
           matches={matches}
           selectedTeam={selectedTeam}
           lastTeam={lastTeam}
+          onScoreUpdated={() => {
+            if (id) {
+              fetchMatches(id).then(setMatches);
+              fetchRankings(id).then(setRankings);
+            }
+          }}
         />
       </div>
     </div>

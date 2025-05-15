@@ -1,14 +1,20 @@
+import { updateMatchScore } from '../services/googleSheets';
+import { useState } from 'react';
 import type { MatchEntry } from '../types';
+import ScoreEditorModal from './ScoreEditorModal'; // import the modal component
 
 interface Props {
   data: MatchEntry[];
   selectedTeam: string | null;
   highlightTeam: string | null;
+  onScoreUpdated?: () => void; // ✅ optional
 }
 
 
 
-export default function MatchesTable({ data, selectedTeam, highlightTeam }: Props) {
+export default function MatchesTable({ data, selectedTeam, highlightTeam, onScoreUpdated }: Props) {
+  const [editingMatch, setEditingMatch] = useState<MatchEntry | null>(null);
+
   const filteredMatches = selectedTeam
     ? data.filter(match =>
       match.leftTeam === selectedTeam || match.rightTeam === selectedTeam
@@ -52,7 +58,7 @@ export default function MatchesTable({ data, selectedTeam, highlightTeam }: Prop
                   </td>
 
                   {/* Scores or time as 3 parts */}
-                  <td className="px-0 py-2 text-center">
+                  <td className="px-0 py-2 text-center cursor-pointer" onClick={() => setEditingMatch(match)}>
                     {hasScores ? (
                       <div className="flex justify-center items-center gap-1 py-0">
                         <span className={`flex aspect-square w-12 items-center justify-center rounded text-white font-bold text-base ${left > right ? 'bg-green-500' : 'bg-gray-300 text-gray-800'}`}>
@@ -92,6 +98,30 @@ export default function MatchesTable({ data, selectedTeam, highlightTeam }: Prop
           </tbody>
         </table>
       </div>
+      {editingMatch && (
+        <ScoreEditorModal
+          match={editingMatch}
+          onCancel={() => setEditingMatch(null)}
+          onConfirm={async (leftScore, rightScore) => {
+            if (editingMatch) {
+              try {
+                const groupMatch = editingMatch.group; // assumes match has a 'group' property
+                const matchIndex = data.findIndex(
+                  m => m.leftTeam === editingMatch.leftTeam && m.rightTeam === editingMatch.rightTeam
+                );
+                if (groupMatch && matchIndex !== -1) {
+                  await updateMatchScore(groupMatch, matchIndex, leftScore, rightScore);
+                  if (onScoreUpdated) onScoreUpdated(); // ✅ Trigger refresh
+                }
+              } catch (error) {
+                console.error("Failed to update match score:", error);
+              } finally {
+                setEditingMatch(null);
+              }
+            }
+          }}
+        />
+      )}
     </div>
   );
 }

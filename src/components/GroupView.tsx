@@ -8,9 +8,10 @@ interface Props {
   selectedTeam: string | null;
   lastTeam: string | null;
   toggleFilter?: () => void;
+  onScoreUpdated?: () => void;
 }
 
-export default function GroupView({ rankings, matches, selectedTeam, lastTeam }: Props) {
+export default function GroupView({ rankings, matches, selectedTeam, lastTeam, onScoreUpdated }: Props) {
   return (
     <div className="space-y-4">
 
@@ -37,6 +38,7 @@ export default function GroupView({ rankings, matches, selectedTeam, lastTeam }:
         data={matches}
         selectedTeam={selectedTeam}
         highlightTeam={lastTeam}
+        onScoreUpdated={onScoreUpdated}
       />
       </div>
 

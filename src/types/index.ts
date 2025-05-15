@@ -12,4 +12,5 @@ export interface MatchEntry {
   rightScore: number | string;
   startTime: string;
   court: string;
+  group: string;
 }
