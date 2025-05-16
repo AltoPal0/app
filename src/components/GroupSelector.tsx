@@ -2,10 +2,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 
-const allGroups = [
-  ["A", "B", "C", "D", "E"],
-  ["F", "G", "H", "I", "J"],
-];
+const allGroups = [['A', 'B', 'C', 'D', 'E', 'Americana'], ['F', 'G', 'H', 'I', 'J', 'Americana']];
 
 export default function GroupSelector() {
   const [page, setPage] = useState(0);
@@ -45,12 +42,16 @@ export default function GroupSelector() {
             {allGroups.map((groupSet, i) => (
               <div
                 key={i}
-                className="w-full flex flex-col items-center justify-center gap-3 py-6"
+                className="w-full flex flex-col items-center justify-center gap-0 py-3"
               >
                 {groupSet.map((group) => (
-                  <Link key={group} to={`/group/${group}`}>
-                    <button className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-4 px-10 rounded-lg shadow-md transition duration-300 ease-in-out my-2 w-40 text-center">
-                      Groupe {group}
+                  <Link key={group} to={`/group/${group === 'Americana' ? 'AMERICANA' : group}`}>
+                    <button className={`text-white font-semibold py-4 px-10 rounded-lg shadow-md transition duration-300 ease-in-out my-2 w-40 text-center ${
+                      group === 'Americana'
+                        ? 'bg-gradient-to-r from-pink-400 to-pink-600 hover:from-pink-500 hover:to-pink-700'
+                        : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700'
+                    }`}>
+                      {group === 'Americana' ? 'Americana' : `Groupe ${group}`}
                     </button>
                   </Link>
                 ))}

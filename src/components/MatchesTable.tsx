@@ -17,10 +17,15 @@ export default function MatchesTable({ data, selectedTeam, highlightTeam, onScor
   const [isSaving, setIsSaving] = useState(false);
 
   const filteredMatches = selectedTeam
-    ? data.filter(match =>
-      match.leftTeam === selectedTeam || match.rightTeam === selectedTeam
-    )
-    : data;
+      ? data.filter(match => {
+          if (!selectedTeam.includes('/')) {
+            // Americana case: match if selected player is part of any team
+            return match.leftTeam.split('/').some(name => name.trim() === selectedTeam) ||
+                   match.rightTeam.split('/').some(name => name.trim() === selectedTeam);
+          }
+          return match.leftTeam === selectedTeam || match.rightTeam === selectedTeam;
+        })
+      : data;
 
   return (
     <div className="w-full">
@@ -51,7 +56,13 @@ export default function MatchesTable({ data, selectedTeam, highlightTeam, onScor
                     {leftNames.map((n, i) => (
                       <div
                         key={i}
-                        className={highlightTeam && match.leftTeam === highlightTeam ? 'font-bold' : ''}
+                        className={
+                          n === selectedTeam
+                            ? 'font-bold text-pink-400'
+                            : highlightTeam && match.leftTeam === highlightTeam
+                              ? 'font-bold'
+                              : ''
+                        }
                       >
                         {n}
                       </div>
@@ -87,7 +98,13 @@ export default function MatchesTable({ data, selectedTeam, highlightTeam, onScor
                     {rightNames.map((n, i) => (
                       <div
                         key={i}
-                        className={highlightTeam && match.rightTeam === highlightTeam ? 'font-bold' : ''}
+                        className={
+                          n === selectedTeam
+                            ? 'font-bold text-pink-400'
+                            : highlightTeam && match.rightTeam === highlightTeam
+                              ? 'font-bold'
+                              : ''
+                        }
                       >
                         {n}
                       </div>
