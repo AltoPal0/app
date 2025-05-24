@@ -16,16 +16,15 @@ export default function MatchesTable({ data, selectedTeam, highlightTeam, onScor
   const [editingMatch, setEditingMatch] = useState<MatchEntry | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
-  const filteredMatches = selectedTeam
-      ? data.filter(match => {
-          if (!selectedTeam.includes('/')) {
-            // Americana case: match if selected player is part of any team
-            return match.leftTeam.split('/').some(name => name.trim() === selectedTeam) ||
-                   match.rightTeam.split('/').some(name => name.trim() === selectedTeam);
-          }
-          return match.leftTeam === selectedTeam || match.rightTeam === selectedTeam;
-        })
-      : data;
+  const filteredMatches = data.filter(match => {
+    if (!selectedTeam) return true;
+    if (!match.court) return true; // Always show breaks
+    if (!selectedTeam.includes('/')) {
+      return match.leftTeam.split('/').some(name => name.trim() === selectedTeam) ||
+             match.rightTeam.split('/').some(name => name.trim() === selectedTeam);
+    }
+    return match.leftTeam === selectedTeam || match.rightTeam === selectedTeam;
+  });
 
   return (
     <div className="w-full">
@@ -70,7 +69,10 @@ export default function MatchesTable({ data, selectedTeam, highlightTeam, onScor
                   </td>
 
                   {/* Scores or time as 3 parts */}
-                  <td className="px-0 py-2 text-center cursor-pointer" onClick={() => setEditingMatch(match)}>
+                  <td
+                    className={`px-0 py-2 text-center ${match.court ? 'cursor-pointer' : ''}`}
+                    onClick={() => match.court && setEditingMatch(match)}
+                  >
                     {hasScores ? (
                       <div className="flex justify-center items-center gap-1 py-0">
                         <span className={`flex aspect-square w-12 items-center justify-center rounded text-white font-bold text-base ${left > right ? 'bg-green-500' : 'bg-gray-300 text-gray-800'}`}>
@@ -85,8 +87,8 @@ export default function MatchesTable({ data, selectedTeam, highlightTeam, onScor
                         <div className="text-base font-semibold">
                           {hour}h{minute}
                         </div>
-                        <span className="inline-block px-2 py-1 text-xs font-semibold rounded bg-blue-600 text-white border border-white">
-                          Piste {match.court}
+                        <span className={`inline-block px-2 py-1 text-xs font-semibold rounded border border-white ${match.court ? 'bg-blue-600 text-white' : 'bg-red-600 text-white'}`}>
+                          {match.court ? `Piste ${match.court}` : 'Pause'}
                         </span>
                       </div>
                     )}
