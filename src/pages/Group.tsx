@@ -74,7 +74,7 @@ export default function Group() {
 
   return (
 
-    <div className="w-full max-w-5xl bg-white shadow-md overflow-hidden">
+    <div className="w-full max-w-5xl bg-blue-900 shadow-md overflow-hidden">
 
       {/* Header */}
       <div className="flex justify-between items-center px-4 py-4 border-b border-gray-200">
@@ -93,9 +93,9 @@ export default function Group() {
         {/* Center: Group Label */}
         <a
           href="/"
-          className="text-xl font-extrabold tracking-tight text-blue-700 hover:text-blue-800"
+          className="text-xl font-extrabold tracking-tight text-white hover:text-blue-800"
         >
-          Groupe {id?.toUpperCase()}
+          Groupe {(id && ['F','G','H','I','J'].includes(id.toUpperCase())) ? (['F','G','H','I','J'].indexOf(id.toUpperCase()) + 1) : id?.toUpperCase()}
         </a>
 
         {/* Right: Team Selector */}

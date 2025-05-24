@@ -23,7 +23,7 @@ export default function RankingsTable({ data , selectedTeam }: Props) {
               <tr
               key={idx}
               className={`${
-                entry.team === selectedTeam ? 'font-bold' : idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+                entry.team === selectedTeam ? 'bg-white' : idx % 2 === 0 ? 'bg-white' : 'bg-blue-50'
               }`}
             >
                 <td className="px-1 py-1">{entry.team}</td>

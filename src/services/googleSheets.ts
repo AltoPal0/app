@@ -6,7 +6,7 @@ const SPREADSHEET_ID = '1Ghxf5Adi2np5vN7mimAHIDWBWRpiWV8r28_1v9Kj0YE';
 function buildRange(group: string, type: 'rankings' | 'matches'): string {
   if (type === 'rankings') {
     if (group === 'GRAMERICANA') {
-      return `${group}!N3:P10`;
+      return `${group}!N3:Q10`;
     } else {
       return `${group}!N3:Q7`;
     }

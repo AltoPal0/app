@@ -49,7 +49,7 @@ export default function MatchesTable({ data, selectedTeam, highlightTeam, onScor
               const rightNames = match.rightTeam.split('/').map(n => n.trim());
 
               return (
-                <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-blue-50'}>
                   {/* Left team (2 lines) */}
                   <td className={`px-2 py-2 text-lg text-left leading-tight ${match.leftTeam === selectedTeam ? 'font-bold' : ''
                     }`}>
